@@ -12,8 +12,41 @@ class PatientController extends Controller
      */
     public function index(Request $request)
     {
-        $perPage = $request->get('per_page', 10); // default 10
-        $patients = Patient::paginate($perPage);
+        $query = Patient::query();
+
+        // 🔍 Pencarian bebas (nama, rm_number, telepon)
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('rm_number', 'like', "%{$search}%")
+                  ->orWhere('phone_number', 'like', "%{$search}%");
+            });
+        }
+
+        // 🔍 Filter gender (enum: male, female)
+        if ($request->filled('gender')) {
+            $query->where('gender', $request->input('gender'));
+        }
+
+        // 🔍 Filter blood_type (enum: A, B, O, AB)
+        if ($request->filled('blood_type')) {
+            $query->where('blood_type', $request->input('blood_type'));
+        }
+
+        // 🔍 Filter education (enum: SD, SMP, SMA, D1, D2, D3, D4, S1, S2, S3, Pendidikan Profesi)
+        if ($request->filled('education')) {
+            $query->where('education', $request->input('education'));
+        }
+
+        // 🔍 Filter status pernikahan (enum: Belum Kawin, Kawin, Cerai Hidup, Cerai Mati)
+        if ($request->filled('married_status')) {
+            $query->where('married_status', $request->input('married_status'));
+        }
+
+        // Pagination default: 10 per halaman
+        $patients = $query->paginate(10);
 
         return response()->json([
             'success' => true,
@@ -21,6 +54,8 @@ class PatientController extends Controller
             'data' => $patients
         ]);
     }
+
+
 
     /**
      * Simpan data pasien baru.
