@@ -3,14 +3,15 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\ApprovalController;
+
+
 use App\Http\Controllers\KomplainController;
-
-
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\UnitController;
-use App\Http\Controllers\Admin\UserController;
 
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Admin\PegawaiController;
@@ -37,4 +38,4 @@ use App\Http\Controllers\Admin\NotificationController as AdminNotificationContro
 | USER PAGE
 |
 */
-Route::get('/', [LoginController::class, 'index'])->name('login');
+Route::get('/', [LandingController::class, 'index'])->name('login');
